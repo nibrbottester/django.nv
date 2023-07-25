@@ -57,7 +57,7 @@ jobs:
 
   prod:
     runs-on: ubuntu-20.04
-    needs: integration
+    needs: zap_baseline
     steps:
       - run: echo "This is a deploy step."
 
