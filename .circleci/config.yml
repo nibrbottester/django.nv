@@ -17,18 +17,17 @@ jobs:
           pip install -r requirements.txt
           python manage.py test taskManager
 
-  zap_baseline:
+  nuclei:
     machine: true
     steps:
       - checkout
 
       - run: |
-          docker pull owasp/zap2docker-stable:2.10.0
-          docker run --user root --rm -v $(pwd):/zap/wrk:rw -w /zap owasp/zap2docker-stable:2.10.0 zap-baseline.py -t ${PROD_URL} -J zap-output.json || true
+          docker run --user $(id -u):$(id -g) -w /nuclei -v $(pwd):/nuclei:rw --rm projectdiscovery/nuclei:v2.9.6 -u https://prod-dwdcblxu.lab.practical-devsecops.training -j -o nuclei-output.json
 
       - store_artifacts:
-          path: zap-output.json
-          destination: zap-artifact
+          path: nuclei-output.json
+          destination: nuclei-artifact
   prod:
     docker:
       - image: python:3.6
@@ -44,10 +43,11 @@ workflows:
       - test:
           requires:
             - build 
-      - zap_baseline:
+      - nuclei:
           requires:
             - test
       - prod:
           type: approval
           requires:
-            - zap_baseline
+            - nuclei
+
