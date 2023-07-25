@@ -23,7 +23,7 @@ jobs:
       - checkout
 
       - run:
-          command: docker run --rm -v $(pwd):/src -w /src hysnsec/retire --outputformat json --outputpath retirejs-output.json --severity high || true
+          command: docker run --rm -v $(pwd):/src -w /src hysnsec/retire --outputformat json --outputpath retirejs-output.json --severity low || true
 
       - store_artifacts:
           path: retirejs-output.json
