@@ -15,3 +15,5 @@ job:
   stage: build
   script:
     - echo "I'm a job"
+    - echo "I'm a job"
+    
